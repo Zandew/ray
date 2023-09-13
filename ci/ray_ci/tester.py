@@ -75,7 +75,6 @@ def main(
     if not build_name:
         build_name = f"{team}build"
     container = TesterContainer(build_name)
-    container.setup_test_environment()
     if run_flaky_tests:
         test_targets = _get_flaky_test_targets(team)
     else:

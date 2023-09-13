@@ -49,6 +49,26 @@ class Container:
             stderr=sys.stderr,
         )
 
+    def install_ray(self) -> None:
+        env = os.environ.copy()
+        env["DOCKER_BUILDKIT"] = "1"
+        subprocess.check_call(
+            [
+                "docker",
+                "build",
+                "--build-arg",
+                f"BASE_IMAGE={self._get_docker_image()}",
+                "-t",
+                self._get_docker_image(),
+                "-f",
+                "/home/ubuntu/ray/ci/ray_ci/tests.env.Dockerfile",
+                "/home/ubuntu/ray",
+            ],
+            env=env,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+        )
+
     def _get_run_command(self, script: List[str]) -> List[str]:
         command = [
             "docker",

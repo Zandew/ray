@@ -91,6 +91,18 @@ DATA_GRAFANA_PANELS = [
             )
         ],
     ),
+    Panel(
+        id=8,
+        title="UDF Time",
+        description="Time spent in UDF code.",
+        unit="seconds",
+        targets=[
+            Target(
+                expr="sum(ray_data_udf_time_seconds{{{global_filters}}}) by (dataset)",
+                legend="UDF Time: {{dataset}}",
+            )
+        ],
+    ),
 ]
 
 ids = []

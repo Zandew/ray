@@ -204,6 +204,10 @@ const DATA_METRICS_CONFIG: MetricsSectionConfig[] = [
         title: "Bytes Outputted",
         pathParams: "orgId=1&theme=light&panelId=7",
       },
+      {
+        title: "UDF Time",
+        pathParams: "orgId=1&theme=light&panelId=8",
+      },
     ],
   },
 ];

@@ -1182,6 +1182,18 @@ def test_stats_actor_metrics():
 
     assert ds._uuid == update_fn.call_args_list[-1].args[1]["dataset"]
 
+    def sleep_three(x):
+        import time
+
+        time.sleep(3)
+        return x
+
+    with patch_update_stats_actor() as update_fn:
+        ds = ray.data.range(3).map_batches(sleep_three, batch_size=1).materialize()
+
+    final_metric = update_fn.call_args_list[-1].args[0][-1]
+    assert final_metric.udf_time_seconds >= 9
+
 
 def test_dataset_name():
     ds = ray.data.range(100, parallelism=20).map_batches(lambda x: x)

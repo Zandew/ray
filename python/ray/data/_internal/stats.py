@@ -184,6 +184,11 @@ class _StatsActor:
             description="Bytes outputted by dataset operators",
             tag_keys=tags_keys,
         )
+        self.udf_time = Gauge(
+            "data_udf_time_seconds",
+            description="Time spent in UDF code.",
+            tag_keys=tags_keys,
+        )
 
     def record_start(self, stats_uuid):
         self.start_time[stats_uuid] = time.perf_counter()
@@ -228,6 +233,7 @@ class _StatsActor:
         self.bytes_outputted.set(stats["bytes_outputs_generated"], tags)
         self.cpu_usage.set(stats["cpu_usage"], tags)
         self.gpu_usage.set(stats["gpu_usage"], tags)
+        self.udf_time.set(stats["udf_time_seconds"], tags)
 
     def clear_metrics(self, tags: Dict[str, str]):
         self.bytes_spilled.set(0, tags)
@@ -237,6 +243,7 @@ class _StatsActor:
         self.bytes_outputted.set(0, tags)
         self.cpu_usage.set(0, tags)
         self.gpu_usage.set(0, tags)
+        self.udf_time.set(0, tags)
 
 
 def _get_or_create_stats_actor():

@@ -94,6 +94,13 @@ class OpRuntimeMetrics:
         default=0, metadata={"map_only": True, "export_metric": True}
     )
 
+    # === Miscellaneous metrics ===
+
+    # Time spent in UDF code.
+    udf_time_seconds: float = field(
+        default=0, metadata={"map_only": True, "export_metric": True}
+    )
+
     def __init__(self, op: "PhysicalOperator"):
         from ray.data._internal.execution.operators.map_operator import MapOperator
 
@@ -208,7 +215,9 @@ class OpRuntimeMetrics:
         if self.obj_store_mem_cur > self.obj_store_mem_peak:
             self.obj_store_mem_peak = self.obj_store_mem_cur
 
-        for block_ref, _ in output.blocks:
+        for block_ref, meta in output.blocks:
+            if meta.exec_stats is not None and meta.exec_stats.wall_time_s is not None:
+                self.udf_time_seconds += meta.exec_stats.wall_time_s
             trace_allocation(block_ref, "operator_output")
 
     def on_task_finished(self, task_index: int):

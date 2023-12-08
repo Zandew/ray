@@ -247,7 +247,7 @@ class Dataset:
         self._current_executor: Optional["Executor"] = None
         self._write_ds = None
 
-        self._set_uuid(StatsManager.get_dataset_id_from_stats_actor())
+        self._set_uuid("dataset")#StatsManager.get_dataset_id_from_stats_actor())
 
     @staticmethod
     def copy(

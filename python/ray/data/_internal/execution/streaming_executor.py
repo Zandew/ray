@@ -129,10 +129,10 @@ class StreamingExecutor(Executor, threading.Thread):
             self._global_info = ProgressBar("Running", dag.num_outputs_total())
 
         self._output_node: OpState = self._topology[dag]
-        StatsManager.register_dataset_to_stats_actor(
+        """StatsManager.register_dataset_to_stats_actor(
             self._dataset_tag,
             self._get_operator_tags(),
-        )
+        )"""
         self.start()
         self._execution_started = True
 
@@ -174,7 +174,7 @@ class StreamingExecutor(Executor, threading.Thread):
             self._shutdown = True
             # Give the scheduling loop some time to finish processing.
             self.join(timeout=2.0)
-            self._update_stats_metrics(
+            """self._update_stats_metrics(
                 state="FINISHED" if execution_completed else "FAILED",
                 force_update=True,
             )
@@ -182,7 +182,7 @@ class StreamingExecutor(Executor, threading.Thread):
             # not persist in the grafana dashboard after execution
             StatsManager.clear_execution_metrics(
                 self._dataset_tag, self._get_operator_tags()
-            )
+            )"""
             # Freeze the stats and save it.
             self._final_stats = self._generate_stats()
             stats_summary_string = self._final_stats.to_summary().to_string(
@@ -302,7 +302,7 @@ class StreamingExecutor(Executor, threading.Thread):
         for op_state in topology.values():
             op_state.refresh_progress_bar()
 
-        self._update_stats_metrics(state="RUNNING")
+        #self._update_stats_metrics(state="RUNNING")
         if time.time() - self._last_debug_log_time >= DEBUG_LOG_INTERVAL_SECONDS:
             _log_op_metrics(topology)
             if not DEBUG_TRACE_SCHEDULING:
